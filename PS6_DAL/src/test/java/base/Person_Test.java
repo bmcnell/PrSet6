@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -31,12 +32,12 @@ public class Person_Test {
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
-		 person1 = new PersonDomainModel();
+		person1 = new PersonDomainModel();
 		 
 		try {
 			person1Birth = dateFormat.parse("1994-11-27");
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -51,6 +52,46 @@ public class Person_Test {
 		
 	}
 	
-	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+	}
 
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		PersonDAL.deletePerson(person1UUID);
+	}
+
+	@Before
+	public void setUp() throws Exception {
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
+	
+	
+	@Test
+	public void updatePersonTest() {
+		//test update, add, and getPerson
+		PersonDAL.addPerson(person1);
+		person1.setFirstName("Bonnie");
+		
+		PersonDAL.updatePerson(person1);
+		assertEquals("Bonnie", (PersonDAL.getPerson(person1UUID)).getFirstName());
+	}
+
+	
+	@Test
+	public void deletePersonTest() {
+		//test delete, add, and getPersons
+		ArrayList<PersonDomainModel> testPersons;
+		PersonDAL.addPerson(person1);
+		testPersons = PersonDAL.getPersons();
+		assertEquals(testPersons.size(), 1);
+		
+		PersonDAL.deletePerson(person1UUID);
+		testPersons = PersonDAL.getPersons();
+		assertEquals(testPersons.size(), 0);
+	}
+	
 }
